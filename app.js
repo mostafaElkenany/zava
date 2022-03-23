@@ -15,4 +15,4 @@ app.use("/api/trucks", trucksRouter);
 app.use("/api/parcels", parcelsRouter);
 
 
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+module.exports = app

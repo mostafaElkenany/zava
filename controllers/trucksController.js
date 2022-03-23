@@ -5,7 +5,7 @@ const { Truck, Parcel } = db;
 const getTrucks = async (req, res) => {
     try {
         const trucks = await Truck.findAll();
-        res.status(200).json(trucks);
+        res.status(200).send(trucks);
     } catch (error) {
         console.log(error);
         res.status(500).send("something went wrong");
@@ -15,7 +15,7 @@ const getTrucks = async (req, res) => {
 const createTruck = async (req, res) => {
     try {
         const newTruck = await Truck.create(req.body);
-        res.status(200).json(newTruck);
+        res.status(201).json({ newTruck });
     } catch (error) {
         console.log(error);
         res.status(500).send("something went wrong");
@@ -33,11 +33,12 @@ const loadTruck = async (req, res) => {
 
         const result = await Parcel.update({ truckId: truckId }, {
             where: {
-                id: parcelIds
+                id: parcelIds,
+                truckId: null
             },
         });
 
-        if (!result[0]) return res.status(400).json({ message: "Bad Request", error: "parcels not found" });
+        if (!result[0]) return res.status(400).json({ message: "Bad Request", error: "parcels not found or loaded in another truck" });
 
         res.status(200).json({ message: "Truck loaded successfully", NoOfParcelsLoaded: result[0] });
 
@@ -58,11 +59,12 @@ const unloadTruck = async (req, res) => {
 
         const result = await Parcel.update({ truckId: null }, {
             where: {
-                id: parcelIds
+                id: parcelIds,
+                truckId
             },
         });
 
-        if (!result[0]) return res.status(400).json({ message: "Bad Request", error: "parcels not found" });
+        if (!result[0]) return res.status(400).json({ message: "Bad Request", error: "parcels not found in truck" });
 
         res.status(200).json({ message: "Truck unloaded successfully", NoOfParcelsUnloaded: result[0] });
 

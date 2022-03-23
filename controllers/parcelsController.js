@@ -5,7 +5,7 @@ const Parcel = db.Parcel;
 const getParcels = async (req, res) => {
     try {
         const parcels = await Parcel.findAll();
-        res.status(200).json(parcels);
+        res.status(200).send(parcels);
     } catch (error) {
         console.log(error);
         res.status(500).send("something went wrong");
@@ -14,8 +14,10 @@ const getParcels = async (req, res) => {
 
 const createParcel = async (req, res) => {
     try {
-        const newParcel = await Parcel.create(req.body);
-        res.status(200).json(newParcel);
+        const { weight } = req.body;
+        if (!weight) return res.status(400).json({ message: "Bad Request", error: "Weight is required" });
+        const newParcel = await Parcel.create({ weight });
+        res.status(201).json({ newParcel });
     } catch (error) {
         console.log(error);
         res.status(500).send("something went wrong");

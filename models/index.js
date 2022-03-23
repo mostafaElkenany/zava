@@ -24,7 +24,7 @@ db.Parcel = require("./Parcel")(sequelize, DataTypes);
 (async () => {
   try {
     await sequelize.sync({ force: false });
-    console.log("Sync Successful");
+    // console.log("Sync Successful");
   } catch (error) {
     console.log("Sync Failed", error);
   }
